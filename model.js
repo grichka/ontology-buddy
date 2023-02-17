@@ -35,6 +35,27 @@ function getClassHierarchy(parsedRDF) {
     propertyDefByIri: {}
   };
 
+  for (const classQuad of parsedRDF.classQuads) {
+    /** @type {ClassDef} */
+    const classDef = {
+      iri: classQuad.subject.value,
+      name: classQuad.subject.value.replace(parsedRDF.baseIri, ''),
+      subClassOf: [],
+      subClasses: [],
+      properties: []
+    };
+    classHierarchy.classDefByIri[classDef.iri] = classDef;
+  }
+
+  for (const subClassQuad of parsedRDF.subClassQuads) {
+    const parentClassIri = subClassQuad.object.value;
+    const parentClassDef = classHierarchy.classDefByIri[parentClassIri];
+    const childClassIri = subClassQuad.subject.value;
+    const childClassDef = classHierarchy.classDefByIri[childClassIri];
+    parentClassDef.subClasses = _.union(parentClassDef.subClasses, [childClassIri]);
+    childClassDef.subClassOf = _.union(childClassDef.subClassOf, [parentClassIri]);
+  }
+
   return classHierarchy;
 }
 
