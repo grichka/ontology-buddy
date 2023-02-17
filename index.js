@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import * as parser from "./parser.js";
+import * as model from "./model.js";
 
 async function run() {
   console.log('Running...');
@@ -16,12 +17,16 @@ async function run() {
   console.log(`ObjectPropertyQuads ___ ${parsedRDF.objectPropertyQuads.length}`);
   console.log(`RestrictionQuads ______ ${parsedRDF.restrictionQuads.length}`);
 
-  fs.writeFileSync(path.join('__parsedRDF__', 'quads.json'), JSON.stringify(parsedRDF.quads, null, 2));
-  fs.writeFileSync(path.join('__parsedRDF__', 'classQuads.json'), JSON.stringify(parsedRDF.classQuads, null, 2));
-  fs.writeFileSync(path.join('__parsedRDF__', 'subClassQuads.json'), JSON.stringify(parsedRDF.subClassQuads, null, 2));
-  fs.writeFileSync(path.join('__parsedRDF__', 'datatypePropertyQuads.json'), JSON.stringify(parsedRDF.datatypePropertyQuads, null, 2));
-  fs.writeFileSync(path.join('__parsedRDF__', 'objectPropertyQuads.json'), JSON.stringify(parsedRDF.objectPropertyQuads, null, 2));
-  fs.writeFileSync(path.join('__parsedRDF__', 'restrictionQuads.json'), JSON.stringify(parsedRDF.restrictionQuads, null, 2));
+  fs.writeFileSync(path.join('__debug__', 'quads.json'), JSON.stringify(parsedRDF.quads, null, 2));
+  fs.writeFileSync(path.join('__debug__', 'classQuads.json'), JSON.stringify(parsedRDF.classQuads, null, 2));
+  fs.writeFileSync(path.join('__debug__', 'subClassQuads.json'), JSON.stringify(parsedRDF.subClassQuads, null, 2));
+  fs.writeFileSync(path.join('__debug__', 'datatypePropertyQuads.json'), JSON.stringify(parsedRDF.datatypePropertyQuads, null, 2));
+  fs.writeFileSync(path.join('__debug__', 'objectPropertyQuads.json'), JSON.stringify(parsedRDF.objectPropertyQuads, null, 2));
+  fs.writeFileSync(path.join('__debug__', 'restrictionQuads.json'), JSON.stringify(parsedRDF.restrictionQuads, null, 2));
+
+  const classHierarchy = model.getClassHierarchy(parsedRDF);
+
+  fs.writeFileSync(path.join('__debug__', 'classHierarchy.json'), JSON.stringify(classHierarchy, null, 2));
 
   console.log('Done!');
 }
