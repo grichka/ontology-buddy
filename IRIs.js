@@ -25,6 +25,9 @@ export default {
   owl: {
     sameAs: `${OWL}sameAs`,
     Class: `${OWL}Class`,
+    DatatypeProperty: `${OWL}DatatypeProperty`,
+    ObjectProperty: `${OWL}ObjectProperty`,
+    Restriction: `${OWL}Restriction`,
   },
   r: {
     forSome: `${SWAP}reify#forSome`,

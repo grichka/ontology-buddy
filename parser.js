@@ -4,10 +4,14 @@ import NAMESPACES from './IRIs.js';
 
 /**
  * @typedef {Object} ParsedRDF
+ * @property {string} baseIri
  * @property {Array<n3.Quad>} quads
  * @property {Object.<string, string>} prefixes
  * @property {Array<n3.Quad>} classQuads
  * @property {Array<n3.Quad>} subClassQuads
+ * @property {Array<n3.Quad>} datatypePropertyQuads
+ * @property {Array<n3.Quad>} objectPropertyQuads
+ * @property {Array<n3.Quad>} restrictionQuads
  */
 
 /**
@@ -51,24 +55,25 @@ async function parse(ontologyFile, format = 'Turtle', baseIri) {
           q.object.termType === 'NamedNode';
   });
 
+  parsedRDF.datatypePropertyQuads = parsedRDF.quads.filter(q => {
+    return q.subject.termType === 'NamedNode' &&
+          q.predicate.value === NAMESPACES.rdf.type && q.predicate.termType === 'NamedNode' &&
+          q.object.value === NAMESPACES.owl.DatatypeProperty && q.object.termType === 'NamedNode';
+  });
+
+  parsedRDF.objectPropertyQuads = parsedRDF.quads.filter(q => {
+    return q.subject.termType === 'NamedNode' &&
+          q.predicate.value === NAMESPACES.rdf.type && q.predicate.termType === 'NamedNode' &&
+          q.object.value === NAMESPACES.owl.ObjectProperty && q.object.termType === 'NamedNode';
+  });
+
+  parsedRDF.restrictionQuads = parsedRDF.quads.filter(q => {
+    return q.predicate.value === NAMESPACES.rdf.type && q.predicate.termType === 'NamedNode' &&
+          q.object.value === NAMESPACES.owl.Restriction && q.object.termType === 'NamedNode';
+  });
+
   return parsedRDF;
 }
-
-/**
- * @typedef {Object} ClassHierarchy
- * @property {Object.<string, ClassDef>} classDefByIri
- * @property {Object.<string, PropertyDef>} propertyDefByIri
- */
-  /**
-   * @typedef {Object} ClassDef
-   * @property {string} iri
-   * @property {string} className
-   */
-  /**
-   * @typedef {Object} PropertyDef
-   * @property {string} iri
-   * @property {string} propertyName
-   */
 
 export {
   parse
