@@ -1,0 +1,22 @@
+{
+  "name": "ontology-buddy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grichka/ontology-buddy.git"
+  },
+  "author": "Thomas Moreau",
+  "license": "./LICENSE",
+  "bugs": {
+    "url": "https://github.com/grichka/ontology-buddy/issues"
+  },
+  "homepage": "https://github.com/grichka/ontology-buddy#readme",
+  "dependencies": {
+    "n3": "^1.16.3"
+  }
+}
