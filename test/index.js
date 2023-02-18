@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 
 import * as parser from "../ontology/parser.js";
 import * as model from "../ontology/model.js";
+import * as mermaid from "../mermaid/mermaid.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +32,10 @@ async function run() {
   const classHierarchy = model.getClassHierarchy(parsedRDF);
 
   fs.writeFileSync(path.join(__dirname, '__debug__', 'classHierarchy.json'), JSON.stringify(classHierarchy, null, 2));
+
+  const mermaidClassDiagram = mermaid.getClassDiagram(classHierarchy);
+
+  fs.writeFileSync(path.join(__dirname, '__debug__', 'classDiagram.mmd'), mermaidClassDiagram);
 
   console.log('Done!');
 }
