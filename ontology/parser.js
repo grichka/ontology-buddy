@@ -16,11 +16,11 @@ import NAMESPACES from './IRIs.js';
 
 /**
  * @param {string} ontologyFile
- * @param {string} format
  * @param {string} baseIri
+ * @param {string} format
  * @returns {ParsedRDF}
  */
-async function parse(ontologyFile, format = 'Turtle', baseIri) {
+async function parse(ontologyFile, baseIri, format = 'Turtle') {
   /** @type {ParsedRDF} */
   const parsedRDF = {
     baseIri,
