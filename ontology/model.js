@@ -203,7 +203,7 @@ function getClassHierarchy(parsedRDF) {
         });
         for (const maxCardinalityQuad of maxCardinalityQuads) {
           if (maxCardinalityQuad.object.value === '1') {
-            propertyDef.cardinality = maxCardinalityQuad.object.value;
+            propertyDef.cardinality = '0..1';
           }
         }
       }
