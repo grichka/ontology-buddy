@@ -1,0 +1,15 @@
+<%# cByIri=classDefByIri; pByIri=propertyByIri %><%
+%>---
+title: <%= diagram.title %>
+---
+classDiagram
+direction BT<%
+%><% _.keys(cByIri).forEach(cIri => { %>
+class <%= cByIri[cIri].name %> {
+<% cByIri[cIri].properties.forEach(p => { %>    +<%= p.cardinality !== '1' ? 'List~' : '' %><%= _.get(p, 'type.name', 'UNDEFINED') %><%= p.cardinality !== '1' ? '~' : '' %> <%= p.name %>
+<% }); %><%
+%>}
+<% if (cByIri[cIri].subClassOf.length) { %><% cByIri[cIri].subClassOf.forEach(parentCIri => { %><%= cByIri[cIri].name %> --|> <%= cByIri[parentCIri].name %> : extends
+<% }); %><% } %><%
+%><% cByIri[cIri].properties.filter(p => { return _.get(p, 'type.iri', '').startsWith(baseIri) }).forEach(op => { %><%= cByIri[cIri].name %> o-- "<%= op.cardinality %>" <%= _.get(op, 'type.name') %> : has <%= op.cardinality %>
+<% }); %><% }); %>

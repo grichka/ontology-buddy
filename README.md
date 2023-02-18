@@ -11,6 +11,7 @@
     - [ ] 🚧 WIP: Cardinalities
     - [X] Comments
     - [ ] Format restrictions
+- [X] Get Mermaid class diagram from class hierarchy
 
 ## Locally
 

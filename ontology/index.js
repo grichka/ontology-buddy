@@ -1,5 +1,5 @@
-import * as parser from "./parser.js";
-import * as model from "./model.js";
+import * as parser from './parser.js';
+import * as model from './model.js';
 
 /**
  * @param {string} ontologyFile Content of an OWL ontology file

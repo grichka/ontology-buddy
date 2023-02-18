@@ -4,6 +4,7 @@ import NAMESPACES from './IRIs.js';
 
 /**
  * @typedef {Object} ClassHierarchy
+ * @property {string} baseIri Ontology base IRI
  * @property {Object.<string, ClassDef>} classDefByIri
  * @property {Object.<string, PropertyDef>} propertyDefByIri
  */
@@ -36,6 +37,7 @@ import NAMESPACES from './IRIs.js';
 function getClassHierarchy(parsedRDF) {
   /** @type {ClassHierarchy} */
   const classHierarchy = {
+    baseIri: parsedRDF.baseIri,
     classDefByIri: {},
     propertyDefByIri: {}
   };
@@ -77,7 +79,7 @@ function getClassHierarchy(parsedRDF) {
     const propertyDef = {
       iri: datatypeProperty,
       name: datatypePropertySplit[datatypePropertySplit.length - 1],
-      cardinality: '0..*'
+      cardinality: '*'
     };
     classHierarchy.propertyDefByIri[propertyDef.iri] = propertyDef;
 
@@ -134,7 +136,7 @@ function getClassHierarchy(parsedRDF) {
     const propertyDef = {
       iri: objectProperty,
       name: objectPropertySplit[objectPropertySplit.length - 1],
-      cardinality: '0..*'
+      cardinality: '*'
     };
     classHierarchy.propertyDefByIri[propertyDef.iri] = propertyDef;
 
@@ -201,7 +203,7 @@ function getClassHierarchy(parsedRDF) {
         });
         for (const maxCardinalityQuad of maxCardinalityQuads) {
           if (maxCardinalityQuad.object.value === '1') {
-            propertyDef.cardinality = maxCardinalityQuad.object.value;
+            propertyDef.cardinality = '0..1';
           }
         }
       }
