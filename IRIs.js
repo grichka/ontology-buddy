@@ -33,6 +33,8 @@ export default {
     DatatypeProperty: `${OWL}DatatypeProperty`,
     ObjectProperty: `${OWL}ObjectProperty`,
     Restriction: `${OWL}Restriction`,
+    onProperty: `${OWL}onProperty`,
+    maxCardinality: `${OWL}maxCardinality`,
   },
   r: {
     forSome: `${SWAP}reify#forSome`,
