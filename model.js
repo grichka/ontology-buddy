@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+import NAMESPACES from './IRIs.js';
+
 /**
  * @typedef {Object} ClassHierarchy
  * @property {Object.<string, ClassDef>} classDefByIri
@@ -17,12 +19,15 @@ import _ from 'lodash';
    * @typedef {Object} PropertyDef
    * @property {string} iri
    * @property {string} name
-   * @property {Object} type
-   * @property {string} type.iri
-   * @property {string} type.name
-   * @property {string} cardinality
+   * @property {PropertyDefType} type
+   * @property {string} cardinality 0..* | 1..* | 1
    * @property {string} comment
    */
+    /**
+     * @typedef PropertyDefType
+     * @property {string} iri
+     * @property {string} name
+     */
 
 /**
  * @param {import('./parser').ParsedRDF} parsedRDF
@@ -35,6 +40,7 @@ function getClassHierarchy(parsedRDF) {
     propertyDefByIri: {}
   };
 
+  // Classes
   for (const classQuad of parsedRDF.classQuads) {
     /** @type {ClassDef} */
     const classDef = {
@@ -47,6 +53,7 @@ function getClassHierarchy(parsedRDF) {
     classHierarchy.classDefByIri[classDef.iri] = classDef;
   }
 
+  // Inheritance
   for (const subClassQuad of parsedRDF.subClassQuads) {
     const parentClassIri = subClassQuad.object.value;
     const parentClassDef = classHierarchy.classDefByIri[parentClassIri];
@@ -56,7 +63,105 @@ function getClassHierarchy(parsedRDF) {
     childClassDef.subClassOf = _.union(childClassDef.subClassOf, [parentClassIri]);
   }
 
+  // datatypeProperties
+  for (const datatypePropertyQuad of parsedRDF.datatypePropertyQuads) {
+    const datatypeProperty = datatypePropertyQuad.subject.value;
+    const datatypePropertySplit = datatypeProperty.split('#');
+    /** @type {PropertyDef} */
+    const propertyDef = {
+      iri: datatypeProperty,
+      name: datatypePropertySplit[datatypePropertySplit.length - 1],
+      cardinality: '0..*'
+    };
+    classHierarchy.propertyDefByIri[propertyDef.iri] = propertyDef;
+
+    // domain(s)
+    const domainQuads = parsedRDF.quads.filter(q => {
+      return q.subject.value === propertyDef.iri && q.subject.termType === 'NamedNode' &&
+            q.predicate.value === NAMESPACES.rdfs.domain && q.predicate.termType === 'NamedNode'
+    });
+    for (const domainQuad of domainQuads) {
+      const classDef = classHierarchy.classDefByIri[domainQuad.object.value];
+      classDef.properties = _.union(classDef.properties, [propertyDef]);
+    }
+
+    // range(s)
+    const rangeQuads = parsedRDF.quads.filter(q => {
+      return q.subject.value === propertyDef.iri && q.subject.termType === 'NamedNode' &&
+            q.predicate.value === NAMESPACES.rdfs.range && q.predicate.termType === 'NamedNode'
+    });
+    if(rangeQuads.length >= 1) {
+      // FIXME handle list of restrictions (possibly with several types)
+      if (rangeQuads[0].object.termType === 'NamedNode') {
+        propertyDef.type = getPropertyType(rangeQuads[0].object.value);
+      } else {
+        // FIXME get real type instead of string
+        console.warn(`[WARN] Unsupported ranges for datatypeProperty=${propertyDef.iri}`);
+        propertyDef.type = getPropertyType(NAMESPACES.xsd.string);
+      }
+    } else {
+      console.error(`[ERROR] No range defined for datatypeProperty=${propertyDef.iri}`);
+    }
+
+    // comment(s)[0]
+    const commentQuads = parsedRDF.quads.filter(q => {
+      return q.subject.value === propertyDef.iri && q.subject.termType === 'NamedNode' &&
+            q.predicate.value === NAMESPACES.rdfs.comment && q.predicate.termType === 'NamedNode' &&
+            q.object.language === 'en'
+    });
+    for (const commentQuad of commentQuads) {
+      if (propertyDef.comment) {
+        propertyDef.comment.concat(propertyDef.comment, '\n', commentQuad.object.value);
+      } else {
+        propertyDef.comment = commentQuad.object.value;
+      }
+    }
+  }
+
+  // objectProperties
+
+  // Restrictions
+
   return classHierarchy;
+}
+
+/**
+ * @param {string} typeIri
+ * @param {string} baseIri Ontology base IRI
+ * @returns {PropertyDefType} 
+ */
+function getPropertyType(typeIri, baseIri) {
+  /** @type {PropertyDefType} */
+  const propertyDefType = {
+    iri : typeIri
+  };
+
+  switch (typeIri) {
+    case NAMESPACES.xsd.boolean:
+      propertyDefType.name = 'Boolean';
+      break;
+    case NAMESPACES.xsd.dateTime:
+      propertyDefType.name = 'Date';
+      break;
+    case NAMESPACES.xsd.decimal:
+      propertyDefType.name = 'Decimal';
+      break;
+    case NAMESPACES.xsd.double:
+      propertyDefType.name = 'Double';
+      break;
+    case NAMESPACES.xsd.integer:
+      propertyDefType.name = 'Integer';
+      break;
+    case NAMESPACES.xsd.string:
+      propertyDefType.name = 'String';
+      break;
+  
+    default:
+      propertyDefType.name = typeIri.startsWith(baseIri) ? typeIri.replace(baseIri, '') : 'UNDEFINED';
+      break;
+  }
+
+  return propertyDefType;
 }
 
 export {

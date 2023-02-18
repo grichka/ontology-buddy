@@ -11,6 +11,7 @@ export default {
     double: `${XSD}double`,
     integer: `${XSD}integer`,
     string: `${XSD}string`,
+    dateTime: `${XSD}dateTime`,
   },
   rdf: {
     type: `${RDF}type`,
@@ -21,6 +22,10 @@ export default {
   },
   rdfs: {
     subClassOf: `${RDFS}subClassOf`,
+    domain: `${RDFS}domain`,
+    range: `${RDFS}range`,
+    comment: `${RDFS}comment`,
+    label: `${RDFS}label`,
   },
   owl: {
     sameAs: `${OWL}sameAs`,
