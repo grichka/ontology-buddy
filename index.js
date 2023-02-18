@@ -7,7 +7,7 @@ import * as model from "./model.js";
 async function run() {
   console.log('Running...');
 
-  const parsedRDF = await parser.parse(fs.readFileSync(path.join('.', 'Ontology.ttl'), 'utf-8'), 'Turtle', 'https://onerecord.iata.org/');
+  const parsedRDF = await parser.parse(fs.readFileSync(path.join('.', '1ROntology_fixed.ttl'), 'utf-8'), 'Turtle', 'https://onerecord.iata.org/');
 
   console.log(`Ontology ______________ ${parsedRDF.baseIri}`);
   console.log(`Quads _________________ ${parsedRDF.quads.length}`);
