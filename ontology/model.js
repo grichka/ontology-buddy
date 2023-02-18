@@ -4,6 +4,7 @@ import NAMESPACES from './IRIs.js';
 
 /**
  * @typedef {Object} ClassHierarchy
+ * @property {string} baseIri Ontology base IRI
  * @property {Object.<string, ClassDef>} classDefByIri
  * @property {Object.<string, PropertyDef>} propertyDefByIri
  */
@@ -36,6 +37,7 @@ import NAMESPACES from './IRIs.js';
 function getClassHierarchy(parsedRDF) {
   /** @type {ClassHierarchy} */
   const classHierarchy = {
+    baseIri: parsedRDF.baseIri,
     classDefByIri: {},
     propertyDefByIri: {}
   };
