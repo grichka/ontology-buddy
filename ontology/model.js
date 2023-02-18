@@ -79,7 +79,7 @@ function getClassHierarchy(parsedRDF) {
     const propertyDef = {
       iri: datatypeProperty,
       name: datatypePropertySplit[datatypePropertySplit.length - 1],
-      cardinality: '0..*'
+      cardinality: '*'
     };
     classHierarchy.propertyDefByIri[propertyDef.iri] = propertyDef;
 
@@ -136,7 +136,7 @@ function getClassHierarchy(parsedRDF) {
     const propertyDef = {
       iri: objectProperty,
       name: objectPropertySplit[objectPropertySplit.length - 1],
-      cardinality: '0..*'
+      cardinality: '*'
     };
     classHierarchy.propertyDefByIri[propertyDef.iri] = propertyDef;
 
