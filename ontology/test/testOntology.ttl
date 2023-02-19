@@ -1,0 +1,86 @@
+@prefix : <https://test.org/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix testClass: <https://test.org/TestClass#> .
+@prefix otherClass: <https://test.org/OtherClass#> .
+
+<https://test.org/> rdf:type owl:Ontology ;
+                    dc:description "Test TTL ontology"@en ;
+                    dc:title "Test Ontology"@en ;
+                    terms:abstract "This is an ontology for testing purpose"@en ;
+                    rdfs:comment "Test Ontology"@en ;
+                    owl:versionInfo "1.0.0"@en .
+
+#-------------#
+# Annotations #
+#-------------#
+
+###  http://www.w3.org/2002/07/owl#maxCardinality
+owl:maxCardinality rdf:type owl:AnnotationProperty .
+
+###  http://www.w3.org/2002/07/owl#minCardinality
+owl:minCardinality rdf:type owl:AnnotationProperty .
+
+#---------------------#
+# Datatype properties #
+#---------------------#
+
+###  https://test.org/TestClass#a
+testClass:a rdf:type owl:DatatypeProperty ;
+            rdfs:domain :TestClass ;
+            rdfs:range xsd:string ;
+            rdfs:comment "a datatype property"@en ;
+            rdfs:label "testClass:a"@en .
+
+###  https://test.org/OtherClass#c
+otherClass:c rdf:type owl:DatatypeProperty ;
+            rdfs:domain :OtherClass ;
+            rdfs:range xsd:string ;
+            rdfs:comment "c datatype property"@en ;
+            rdfs:label "otherClass:c"@en .
+
+#-------------------#
+# Object properties #
+#-------------------#
+
+###  https://test.org/TestClass#b
+testClass:b rdf:type owl:ObjectProperty ;
+            rdfs:domain :TestClass ;
+            rdfs:range :OtherClass ;
+            rdfs:comment "b object property"@en ;
+            rdfs:label "testClass:b"@en .
+
+#---------#
+# Classes #
+#---------#
+
+###  https://test.org/TestClass
+:TestClass rdf:type owl:Class ;
+            rdfs:subClassOf [ rdf:type owl:Restriction ;
+                              owl:onProperty testClass:b ;
+                              owl:allValuesFrom :OtherClass
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty testClass:a ;
+                              owl:minCardinality "1"^^xsd:nonNegativeInteger
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty  testClass:a ;
+                              owl:maxCardinality "1"^^xsd:nonNegativeInteger
+                            ] ;
+            rdfs:comment "TestClass class definition"@en ;
+            rdfs:label "TestClass"@en .
+
+###  https://test.org/OtherClass
+:OtherClass rdf:type owl:Class ;
+            rdfs:subClassOf [ rdf:type owl:Restriction ;
+                              owl:onProperty  otherClass:c ;
+                              owl:maxCardinality "1"^^xsd:nonNegativeInteger
+                            ] ;
+            rdfs:comment "OtherClass class definition"@en ;
+            rdfs:label "OtherClass"@en .

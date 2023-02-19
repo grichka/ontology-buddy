@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const parser = require('../ontology/parser.js');
-const model = require('../ontology/model.js');
-const mermaid = require('../mermaid/mermaid.js');
+const parser = require('../../ontology/parser.js');
+const model = require('../../ontology/model.js');
+const mermaid = require('../../mermaid/mermaid.js');
 
-async function run() {
+test('[Integration] Experiment with IATA ONE Record ontology', async () => {
   console.log('Running...');
-
+  
   const parsedRDF = await parser.parse(fs.readFileSync(path.join(__dirname, '1ROntology_fixed.ttl'), 'utf-8'), 'https://onerecord.iata.org/', 'Turtle');
 
   console.log(`Ontology ______________ ${parsedRDF.baseIri}`);
@@ -34,6 +34,4 @@ async function run() {
   fs.writeFileSync(path.join(__dirname, '__debug__', 'classDiagram.mmd'), mermaidClassDiagram);
 
   console.log('Done!');
-}
-
-run();
+});

@@ -1,6 +1,5 @@
-import * as n3 from 'n3';
-
-import NAMESPACES from './IRIs.js';
+const n3 = require('n3');
+const { NAMESPACES } = require('./IRIs.js');
 
 /**
  * @typedef {Object} ParsedRDF
@@ -75,6 +74,6 @@ async function parse(ontologyFile, baseIri, format = 'Turtle') {
   return parsedRDF;
 }
 
-export {
+module.exports = {
   parse
 }

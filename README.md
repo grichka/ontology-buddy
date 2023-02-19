@@ -8,7 +8,7 @@
   - [X] Inheritance
   - [ ] 🚧 WIP: Class members (DataProperties and ObjectProperties)
     - [X] Types
-    - [ ] 🚧 WIP: Cardinalities
+    - [X] Cardinalities
     - [X] Comments
     - [ ] Format restrictions
 - [X] Get Mermaid class diagram from class hierarchy
