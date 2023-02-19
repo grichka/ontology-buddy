@@ -19,6 +19,20 @@ function getTemplate(templatePath) {
 }
 
 /**
+ * @param {import('../ontology/model.js').PropertyDefCardinality} cardinality 
+ * @returns {string}
+ */
+function getCardinality(cardinality) {
+  if (cardinality.min === cardinality.max) {
+    return cardinality.max;
+  } else if (cardinality.min === '0' && cardinality.max === '*') {
+    return '*';
+  } else {
+    return `${cardinality.min}..${cardinality.max}`;
+  }
+}
+
+/**
  * @param {import("../ontology/model.js").ClassHierarchy} classHierarchy 
  * @param {boolean} validateDiagram (default: `true`)
  * @returns {string} Mermaid classdiagram
@@ -29,6 +43,9 @@ function getClassDiagram(classHierarchy) {
     baseIri: classHierarchy.baseIri,
     cByIri: classHierarchy.classDefByIri,
     pByIri: classHierarchy.propertyDefByIri,
+    utils: {
+      getCardinality
+    },
     diagram: {
       title: classHierarchy.baseIri
     }

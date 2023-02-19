@@ -34,6 +34,7 @@ const NAMESPACES = {
     ObjectProperty: `${OWL}ObjectProperty`,
     Restriction: `${OWL}Restriction`,
     onProperty: `${OWL}onProperty`,
+    minCardinality: `${OWL}minCardinality`,
     maxCardinality: `${OWL}maxCardinality`,
   },
   r: {

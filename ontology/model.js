@@ -20,13 +20,18 @@ const { NAMESPACES } = require('./IRIs.js');
    * @property {string} iri
    * @property {string} name
    * @property {PropertyDefType} type
-   * @property {string} cardinality 0..* | 1..* | 1
+   * @property {PropertyDefCardinality} cardinality
    * @property {string} comment
    */
     /**
      * @typedef PropertyDefType
      * @property {string} iri
      * @property {string} name
+     */
+    /**
+     * @typedef PropertyDefCardinality
+     * @property {string} min any stringified positive number
+     * @property {string} max any stringified positive number or *
      */
 
 /**
@@ -78,7 +83,10 @@ function getClassHierarchy(parsedRDF) {
     const propertyDef = {
       iri: datatypeProperty,
       name: datatypePropertySplit[datatypePropertySplit.length - 1],
-      cardinality: '*'
+      cardinality: {
+        min: '0',
+        max: '*'
+      }
     };
     classHierarchy.propertyDefByIri[propertyDef.iri] = propertyDef;
 
@@ -135,7 +143,10 @@ function getClassHierarchy(parsedRDF) {
     const propertyDef = {
       iri: objectProperty,
       name: objectPropertySplit[objectPropertySplit.length - 1],
-      cardinality: '*'
+      cardinality: {
+        min: '0',
+        max: '*'
+      }
     };
     classHierarchy.propertyDefByIri[propertyDef.iri] = propertyDef;
 
@@ -190,20 +201,23 @@ function getClassHierarchy(parsedRDF) {
       return q.subject.value === restrictionQuad.subject.value;
     });
     // cardinality
-    // TODO handle all cases
     const onPropertyQuad = restrictionLinkedQuads.find(q => {
       return q.predicate.value === NAMESPACES.owl.onProperty;
     });
     if (onPropertyQuad) {
       const propertyDef = classHierarchy.propertyDefByIri[onPropertyQuad.object.value];
       if (propertyDef) {
-        const maxCardinalityQuads = restrictionLinkedQuads.filter(q => {
+        const minCardinalityQuad = restrictionLinkedQuads.find(q => {
+          return q.predicate.value === NAMESPACES.owl.minCardinality;
+        });
+        if (minCardinalityQuad) {
+          propertyDef.cardinality.min = minCardinalityQuad.object.value;
+        }
+        const maxCardinalityQuad = restrictionLinkedQuads.find(q => {
           return q.predicate.value === NAMESPACES.owl.maxCardinality;
         });
-        for (const maxCardinalityQuad of maxCardinalityQuads) {
-          if (maxCardinalityQuad.object.value === '1') {
-            propertyDef.cardinality = '0..1';
-          }
+        if (maxCardinalityQuad) {
+          propertyDef.cardinality.max = maxCardinalityQuad.object.value;
         }
       }
     }

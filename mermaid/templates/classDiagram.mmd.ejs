@@ -11,5 +11,5 @@ class <%= cByIri[cIri].name %> {
 %>}
 <% if (cByIri[cIri].subClassOf.length) { %><% cByIri[cIri].subClassOf.forEach(parentCIri => { %><%= cByIri[cIri].name %> --|> <%= cByIri[parentCIri].name %> : extends
 <% }); %><% } %><%
-%><% cByIri[cIri].properties.filter(p => { return _.get(p, 'type.iri', '').startsWith(baseIri) }).forEach(op => { %><%= cByIri[cIri].name %> o-- "<%= op.cardinality %>" <%= _.get(op, 'type.name') %> : has <%= op.cardinality %>
+%><% cByIri[cIri].properties.filter(p => { return _.get(p, 'type.iri', '').startsWith(baseIri) }).forEach(op => { %><%= cByIri[cIri].name %> o-- "<%= utils.getCardinality(op.cardinality) %>" <%= _.get(op, 'type.name') %> : has <%= utils.getCardinality(op.cardinality) %>
 <% }); %><% }); %>
