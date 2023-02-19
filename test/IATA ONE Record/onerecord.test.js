@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const parser = require('../../ontology/parser.js');
-const model = require('../../ontology/model.js');
-const mermaid = require('../../mermaid/mermaid.js');
+const parser = require('../../lib/ontology/parser.js');
+const model = require('../../lib/ontology/model.js');
+const mermaid = require('../../lib/mermaid/mermaid.js');
 
 test('[Integration] Experiment with IATA ONE Record ontology', async () => {
   console.log('Running...');
