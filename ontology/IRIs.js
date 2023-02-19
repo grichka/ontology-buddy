@@ -4,7 +4,7 @@ const RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
 const OWL = 'http://www.w3.org/2002/07/owl#';
 const SWAP = 'http://www.w3.org/2000/10/swap/';
 
-export default {
+const NAMESPACES = {
   xsd: {
     decimal: `${XSD}decimal`,
     boolean: `${XSD}boolean`,
@@ -44,3 +44,7 @@ export default {
     implies: `${SWAP}log#implies`,
   },
 };
+
+module.exports = {
+  NAMESPACES
+}

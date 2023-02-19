@@ -1,13 +1,9 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { fileURLToPath } from 'url';
+const fs = require('fs');
+const path = require('path');
 
-import * as parser from "../ontology/parser.js";
-import * as model from "../ontology/model.js";
-import * as mermaid from "../mermaid/mermaid.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const parser = require('../ontology/parser.js');
+const model = require('../ontology/model.js');
+const mermaid = require('../mermaid/mermaid.js');
 
 async function run() {
   console.log('Running...');
@@ -40,4 +36,4 @@ async function run() {
   console.log('Done!');
 }
 
-await run();
+run();

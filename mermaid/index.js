@@ -1,5 +1,5 @@
-import { getClassDiagram } from "./mermaid";
+const { getClassDiagram } = require('./mermaid.js')
 
-export {
+module.exports = {
   getClassDiagram
 }

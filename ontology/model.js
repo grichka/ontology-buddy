@@ -1,6 +1,5 @@
-import _ from 'lodash';
-
-import NAMESPACES from './IRIs.js';
+const _ = require('lodash');
+const { NAMESPACES } = require('./IRIs.js');
 
 /**
  * @typedef {Object} ClassHierarchy
@@ -252,6 +251,6 @@ function getPropertyType(typeIri, baseIri) {
   return propertyDefType;
 }
 
-export {
+module.exports = {
   getClassHierarchy
 }
