@@ -22,6 +22,7 @@ fastify.addHook('onClose', async (instance) => {
 const startServer = async () => {
   try {
     await fastify.listen({
+      host: '::',
       port: process.env.PORT || 3000
     });
   } catch (err) {
